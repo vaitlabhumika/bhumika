@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int main() {
+    char operator;
+    double num1, num2;
+
+    // Display the calculator menu
+    printf("Simple Calculator\n");
+    printf("Choose an operation:\n");
+    printf("+  Add\n");
+    printf("-  Subtract\n");
+    printf("*  Multiply\n");
+    printf("/  Divide\n");
+
+    // Take the operator as input from the user
+    printf("Enter operator (+, -, *, /): ");
+    scanf(" %c", &operator);  // Notice the space before %c to consume any leftover newline character
+
+    // Take two numbers as input
+    printf("Enter first number: ");
+    scanf("%lf", &num1);
+    printf("Enter second number: ");
+    scanf("%lf", &num2);
+
+    // Perform the calculation based on the operator entered
+    switch (operator) {
+        case '+':
+            printf("%.2lf + %.2lf = %.2lf\n", num1, num2, num1 + num2);
+            break;
+        case '-':
+            printf("%.2lf - %.2lf = %.2lf\n", num1, num2, num1 - num2);
+            break;
+        case '*':
+            printf("%.2lf * %.2lf = %.2lf\n", num1, num2, num1 * num2);
+            break;
+        case '/':
+            // Check if the denominator is zero to avoid division by zero error
+            if (num2 != 0) {
+                printf("%.2lf / %.2lf = %.2lf\n", num1, num2, num1 / num2);
+            } else {
+                printf("Error! Division by zero is not allowed.\n");
+            }
+            break;
+        default:
+            // In case of an invalid operator
+            printf("Invalid operator!\n");
+    }
+
+    return 0;
+}
