@@ -1,0 +1,167 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+class Student {
+    String id;
+    String name;
+    int age;
+
+    public Student(String id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Age: " + age;
+    }
+}
+
+public class StudentManagementSystem {
+
+    private static ArrayList<Student> students = new ArrayList<>();
+    private static DefaultListModel<String> studentListModel;
+    private static JList<String> studentJList;
+    private static JTextField idField, nameField, ageField;
+
+    public static void main(String[] args) {
+        // Creating the main frame
+        JFrame frame = new JFrame("Student Management System");
+        frame.setSize(600, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        // Panel for input fields
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(4, 2));
+
+        JLabel idLabel = new JLabel("Student ID:");
+        idField = new JTextField(20);
+        JLabel nameLabel = new JLabel("Student Name:");
+        nameField = new JTextField(20);
+        JLabel ageLabel = new JLabel("Student Age:");
+        ageField = new JTextField(20);
+
+        inputPanel.add(idLabel);
+        inputPanel.add(idField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+        inputPanel.add(ageLabel);
+        inputPanel.add(ageField);
+
+        // Add buttons for operations
+        JPanel buttonPanel = new JPanel();
+        JButton addButton = new JButton("Add Student");
+        JButton editButton = new JButton("Edit Student");
+        JButton deleteButton = new JButton("Delete Student");
+        JButton clearButton = new JButton("Clear Fields");
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addStudent();
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                editStudent();
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                deleteStudent();
+            }
+        });
+
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearFields();
+            }
+        });
+
+        buttonPanel.add(addButton);
+        buttonPanel.add(editButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(clearButton);
+
+        // Panel for student list
+        studentListModel = new DefaultListModel<>();
+        studentJList = new JList<>(studentListModel);
+        JScrollPane listScrollPane = new JScrollPane(studentJList);
+
+        // Adding panels to the main frame
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(buttonPanel, BorderLayout.CENTER);
+        frame.add(listScrollPane, BorderLayout.SOUTH);
+
+        // Display the frame
+        frame.setVisible(true);
+    }
+
+    private static void addStudent() {
+        String id = idField.getText();
+        String name = nameField.getText();
+        int age = Integer.parseInt(ageField.getText());
+
+        if (id.isEmpty() || name.isEmpty() || age <= 0) {
+            JOptionPane.showMessageDialog(null, "All fields must be valid.");
+            return;
+        }
+
+        students.add(new Student(id, name, age));
+        updateStudentList();
+        clearFields();
+    }
+
+    private static void editStudent() {
+        int selectedIndex = studentJList.getSelectedIndex();
+        if (selectedIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a student to edit.");
+            return;
+        }
+
+        String id = idField.getText();
+        String name = nameField.getText();
+        int age = Integer.parseInt(ageField.getText());
+
+        if (id.isEmpty() || name.isEmpty() || age <= 0) {
+            JOptionPane.showMessageDialog(null, "All fields must be valid.");
+            return;
+        }
+
+        Student student = students.get(selectedIndex);
+        student.id = id;
+        student.name = name;
+        student.age = age;
+        updateStudentList();
+        clearFields();
+    }
+
+    private static void deleteStudent() {
+        int selectedIndex = studentJList.getSelectedIndex();
+        if (selectedIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a student to delete.");
+            return;
+        }
+
+        students.remove(selectedIndex);
+        updateStudentList();
+    }
+
+    private static void updateStudentList() {
+        studentListModel.clear();
+        for (Student student : students) {
+            studentListModel.addElement(student.toString());
+        }
+    }
+
+    private static void clearFields() {
+        idField.setText("");
+        nameField.setText("");
+        ageField.setText("");
+    }
+}
