@@ -1,0 +1,115 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+class Product {
+    String name;
+    double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+}
+
+public class ShoppingCart {
+
+    private static ArrayList<Product> cart = new ArrayList<>();
+    private static DefaultListModel<String> cartModel;
+    private static JList<String> cartList;
+    private static JTextField totalField;
+
+    public static void main(String[] args) {
+        // Create the frame for the shopping cart
+        JFrame frame = new JFrame("Shopping Cart");
+        frame.setSize(400, 350);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        // Create a panel for the product selection
+        JPanel productPanel = new JPanel();
+        productPanel.setLayout(new GridLayout(3, 1));
+
+        // Add sample products to the product panel
+        JButton product1Button = new JButton("Product 1 - $10.00");
+        JButton product2Button = new JButton("Product 2 - $15.00");
+        JButton product3Button = new JButton("Product 3 - $20.00");
+
+        productPanel.add(product1Button);
+        productPanel.add(product2Button);
+        productPanel.add(product3Button);
+
+        // Create cart display area
+        cartModel = new DefaultListModel<>();
+        cartList = new JList<>(cartModel);
+        JScrollPane cartScrollPane = new JScrollPane(cartList);
+
+        // Create the total field
+        JLabel totalLabel = new JLabel("Total: $");
+        totalField = new JTextField("0.00", 10);
+        totalField.setEditable(false);
+        JPanel totalPanel = new JPanel();
+        totalPanel.add(totalLabel);
+        totalPanel.add(totalField);
+
+        // Add action listeners to product buttons
+        product1Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addToCart("Product 1", 10.00);
+            }
+        });
+
+        product2Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addToCart("Product 2", 15.00);
+            }
+        });
+
+        product3Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addToCart("Product 3", 20.00);
+            }
+        });
+
+        // Create a button to clear the cart
+        JButton clearCartButton = new JButton("Clear Cart");
+        clearCartButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearCart();
+            }
+        });
+
+        // Layout components
+        frame.add(productPanel, BorderLayout.NORTH);
+        frame.add(cartScrollPane, BorderLayout.CENTER);
+        frame.add(totalPanel, BorderLayout.SOUTH);
+        frame.add(clearCartButton, BorderLayout.EAST);
+
+        // Display the frame
+        frame.setVisible(true);
+    }
+
+    // Add product to the shopping cart
+    private static void addToCart(String productName, double price) {
+        cart.add(new Product(productName, price));
+        cartModel.addElement(productName + " - $" + price);
+        updateTotal();
+    }
+
+    // Clear the shopping cart
+    private static void clearCart() {
+        cart.clear();
+        cartModel.clear();
+        updateTotal();
+    }
+
+    // Update the total price in the cart
+    private static void updateTotal() {
+        double total = 0;
+        for (Product product : cart) {
+            total += product.price;
+        }
+        totalField.setText(String.format("%.2f", total));
+    }
+}
