@@ -1,0 +1,99 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class TaskManager {
+    private static DefaultListModel<String> taskListModel;
+    private static JList<String> taskList;
+    private static JTextField taskInputField;
+    
+    public static void main(String[] args) {
+        // Create the main window (JFrame)
+        JFrame frame = new JFrame("Task Manager");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        
+        // Create a panel to hold components
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        
+        // Create the list model and list to display tasks
+        taskListModel = new DefaultListModel<>();
+        taskList = new JList<>(taskListModel);
+        JScrollPane scrollPane = new JScrollPane(taskList);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Create the input field for entering tasks
+        taskInputField = new JTextField(20);
+        panel.add(taskInputField, BorderLayout.NORTH);
+        
+        // Create buttons
+        JPanel buttonPanel = new JPanel();
+        
+        JButton addButton = new JButton("Add Task");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addTask();
+            }
+        });
+        
+        JButton deleteButton = new JButton("Delete Task");
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                deleteTask();
+            }
+        });
+        
+        JButton completeButton = new JButton("Complete Task");
+        completeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                completeTask();
+            }
+        });
+        
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(completeButton);
+        
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        // Add the panel to the frame
+        frame.add(panel);
+        
+        // Display the frame
+        frame.setVisible(true);
+    }
+    
+    // Add a new task to the list
+    private static void addTask() {
+        String task = taskInputField.getText().trim();
+        if (task.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a task.");
+        } else {
+            taskListModel.addElement(task);
+            taskInputField.setText("");
+        }
+    }
+    
+    // Delete the selected task from the list
+    private static void deleteTask() {
+        int selectedIndex = taskList.getSelectedIndex();
+        if (selectedIndex != -1) {
+            taskListModel.remove(selectedIndex);
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a task to delete.");
+        }
+    }
+    
+    // Mark the selected task as completed
+    private static void completeTask() {
+        int selectedIndex = taskList.getSelectedIndex();
+        if (selectedIndex != -1) {
+            String task = taskListModel.getElementAt(selectedIndex);
+            taskListModel.set(selectedIndex, task + " (Completed)");
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a task to mark as completed.");
+        }
+    }
+}
